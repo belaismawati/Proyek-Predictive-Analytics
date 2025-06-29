@@ -41,7 +41,7 @@ Berdasarkan latar belakang yang telah dijelaskan sebelumnya, berikut beberapa ma
   - Random Forest
   - XGBoost (Extreme Gradient Boosting)
 
-- Setiap solusi dievaluasi menggunakan metrik yang relevan untuk klasifikasi, seperti Accuracy, Precision, Recall, F1-Score, dan Classification Report.
+- Setiap solusi dievaluasi menggunakan metrik yang relevan untuk klasifikasi, seperti Accuracy, Precision, Recall, dan F1-Score.
 
 ## Data Understanding
 Dataset yang digunakan merupakan dataset sekunder yang berasal dari [Kaggle](https://www.kaggle.com/datasets/storytellerman/mecfs-vs-depression-classification-dataset/data). Dataset ini merupakan dataset sintetis pertama dari jenisnya yang dibuat khusus untuk membantu para pemula dan peneliti mengeksplorasi kasus-kasus kompleks diagnosis banding pada kondisi kesehatan mental dan kronis.
@@ -148,8 +148,8 @@ Terdapat 2 fitur yang memiliki _outlier_, yaitu fitur **depression_phq9_score** 
 Data Preparation adalah proses persiapan data sebelum dilakukan analisis atau pemodelan. Dalam proyek ini, proses ini mencakup penanganan _missing values_, transformasi fitur, pembagian dataset, penanganan _imbalanced data_, dan standarisasi. Hal ini bertujuan untuk memastikan model dapat belajar secara efektif dan memberikan prediksi yang akurat.
 
 1. Penanganan _Missing Value_\
-   Penanganan _missing value_ merupakan langkah krusial dalam data preparation. Tahap ini bertujuan untuk mencegah error dan meningkatkan kinerja dan keandalan model machine learning. Terdapat 2 cara penanganan yang dilakukan, yaitu:
-  **a. Melakukan imputasi pada fitur depression_phq9_score**
+   Penanganan _missing value_ merupakan langkah krusial dalam data preparation. Tahap ini bertujuan untuk mencegah error dan meningkatkan kinerja dan keandalan model machine learning. Terdapat 2 cara penanganan yang dilakukan, yaitu:\
+  **a. Melakukan imputasi pada fitur depression_phq9_score**\
     Berdasarkan analisis yang telah dilakukan, diketahui:
     - Hasil diagnosis menunjukkan **depression** ketika nilai **depression_phq9_score >= 10** dan **pem_present = 0**
     - Hasil diagnosis menunjukkan **ME/CFS** ketika nilai **depression_phq9_score < 10** dan **pem_present = 1**
