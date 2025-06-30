@@ -164,7 +164,8 @@ Penanganan _missing value_ merupakan langkah krusial dalam data preparation. Tah
     * Hasil diagnosis menunjukkan **depression** ketika nilai **depression_phq9_score >= 10** dan **pem_present = 0**
     * Hasil diagnosis menunjukkan **ME/CFS** ketika nilai **depression_phq9_score < 10** dan **pem_present = 1**
     * Hasil diagnosis menunjukkan **both** ketika nilai **depression_phq9_score >= 10** dan **pem_present = 1**
-    Dengan begitu, imputasi yang dilakukan pada fitur depression_phq9_score mempertimbangkan diagnosis logis tersebut.
+  
+    Dengan begitu, imputasi yang dilakukan pada fitur depression_phq9_score akan mempertimbangkan diagnosis logis tersebut.
 
 - **Menghapus fitur lainnya yang memiliki _missing value_**
     ```
