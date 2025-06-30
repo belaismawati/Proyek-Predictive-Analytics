@@ -44,7 +44,7 @@ Berdasarkan latar belakang yang telah dijelaskan sebelumnya, berikut beberapa ma
 - Setiap solusi dievaluasi menggunakan metrik yang relevan untuk klasifikasi, seperti Accuracy, Precision, Recall, dan F1-Score.
 
 ## Data Understanding
-Dataset yang digunakan merupakan dataset sekunder yang berasal dari [Kaggle](https://www.kaggle.com/datasets/storytellerman/mecfs-vs-depression-classification-dataset/data). Dataset ini merupakan dataset sintetis pertama dari jenisnya yang dibuat khusus untuk membantu para pemula dan peneliti mengeksplorasi kasus-kasus kompleks diagnosis banding pada kondisi kesehatan mental dan kronis.
+Dataset yang digunakan merupakan dataset sekunder yang berasal dari [Kaggle](https://www.kaggle.com/datasets/storytellerman/mecfs-vs-depression-classification-dataset/data). Dataset ini merupakan dataset sintetis pertama dari jenisnya yang dibuat khusus untuk membantu para pemula dan peneliti mengeksplorasi kasus-kasus kompleks diagnosis banding pada kondisi kesehatan mental dan kronis. Dataset ini terdiri dari 1000 baris dan 16 kolom, dimana penjelasan dari tiap fitur/kolom ditunjukkan sebagai berikut.
  
 **Informasi data**
 
@@ -70,7 +70,7 @@ Dataset yang digunakan merupakan dataset sekunder yang berasal dari [Kaggle](htt
 ### **_Exploratory Data Analysis_ (EDA)**
 _Exploratory Data Analysis_ ([EDA](https://www.revou.co/kosakata/eda)) adalah proses analisis awal data yang bertujuan untuk memahami karakteristik, struktur, dan komponen penting dari dataset sebelum melakukan analisis statistik atau pemodelan prediktif lebih lanjut. Berikut adalah langkah-langkah EDA yang dilakukan pada proyek ini.
 
-**Rangkuman Statistik Deskriptif**
+**1. Rangkuman Statistik Deskriptif**
 |   |age|	sleep_quality_index|	brain_fog_level|	physical_pain_score|	stress_level|	depression_phq9_score|	fatigue_severity_scale_score|	pem_duration_hours|	hours_of_sleep_per_night|	pem_present|	
 |---|---|--------------------|--------------|------------------|---------------|-----------------|-----------------------|------------------|----------------|------------|
 |**count**|  1000.000000|	953.000000|	952.000000|	966.000000|	952.000000|	978.000000|	979.000000|	976.000000|	979.000000|	1000.000000|
@@ -94,7 +94,15 @@ Interpretasi:
 * Rata-rata jam tidur pasien adalah 6.57, yang berarti peserta tidak mencapai durasi tidur yang optimal.
 * 59% dari pasien mengalami Post-Exertional Malaise (PEM).
 
-**Analisis _Missing Value_**
+**2. Analisis Duplikasi pada Data**
+```
+print("Jumlah duplikasi: ", dataset.duplicated().sum())
+```
+
+Interpretasi:\
+Output yang diperoleh dari syntax diatas menunjukkan bahwa tidak terdapat duplikasi pada data.
+
+**3. Analisis _Missing Value_**
 |Fitur|                       _Missing_|   Persentase|
 |-----|-----------------------------|---------------|
 |age  |                            0|            0% |
@@ -114,118 +122,140 @@ exercise_frequency |              39|          3.9% |
 meditation_or_mindfulness |       11|          1.1% |
 diagnosis |                        0|            0% |
 
-Interpretasi:
+Interpretasi:\
 Fitur dengan persentase _missing value_ tertinggi adalah brain_fog_level dan stress_level (4.8%). Secara umum, sebagian besar fitur memiliki kurang dari 5% _missing value_, yang masih dalam batas wajar untuk dilakukan imputasi atau penghapusan baris.
 
-**Visualisasi dengan Boxplot**\
+**4. Analisis Outlier pada Data**\
 ![Boxplot](Boxplot.png)
 
-Interpretasi:
+Interpretasi:\
 Terdapat 2 fitur yang memiliki _outlier_, yaitu fitur **depression_phq9_score** dan **fatigue_severity_scale_score**. Meskipun demikian, tidak akan dilakukan penanganan terhadap _outlier_ tersebut, mengingat _outlier_ masih berada dalam range nilai yang diharapkan dari tiap fitur, yaitu **depression_phq9_score** dengan nilai antara **0 hingga 27** dan **fatigue_severity_scale_score** dengan nilai antara **0 hingga 10**.
 
-**Visualisasi dengan Heatmap**
-1. Numerical Features\
+**5. Visualisasi dengan Heatmap Untuk Melihat Hubungan antar Fitur**
+
+**1. Numerical Features**\
 ![Heatmap](Heatmap-Numerical-Features.png)
 
-   Interpretasi:
-   * Mayoritas fitur numerik dalam dataset tidak memiliki hubungan linear yang kuat satu sama lain (r < 0.3). Hal ini mengindikasikan bahwa setiap fitur mungkin menyumbang informasi unik terhadap model tanpa tumpang tindih signifikan.
-   * Korelasi Pearson antara sleep_quality_index dan physical_pain_score sebesar 0.11, menunjukkan adanya hubungan linear yang sangat lemah. Jika sleep_quality_index meningkat, physical_pain_score cenderung meningkat sedikit juga, tapi hubungan ini sangat lemah.
-    * Nilai korelasi antara pem_present dan depression_phq9_score adalah –0.34, yang menunjukkan hubungan negatif lemah hingga sedang secara linear. Hal ini berarti, semakin tinggi kemungkinan seseorang mengalami PEM (Post-Exertional Malaise), cenderung semakin rendah skor depresi PHQ-9-nya, dan begitu juga sebaliknya.
-    * Korelasi antara fatigue_severity_scale_score dan pem_present sebesar 0.58, yang menunjukkan hubungan moderat hingga kuat secara linear. Hal ini berarti semakin tinggi tingkat kelelahan seseorang, maka semakin besar kemungkinan seseorang tersebut mengalami PEM.
+Interpretasi:
+* Mayoritas fitur numerik dalam dataset tidak memiliki hubungan linear yang kuat satu sama lain (r < 0.3). Hal ini mengindikasikan bahwa setiap fitur mungkin menyumbang informasi unik terhadap model tanpa tumpang tindih signifikan.
+* Korelasi Pearson antara sleep_quality_index dan physical_pain_score sebesar 0.11, menunjukkan adanya hubungan linear yang sangat lemah. Jika sleep_quality_index meningkat, physical_pain_score cenderung meningkat sedikit juga, tapi hubungan ini sangat lemah.
+* Nilai korelasi antara pem_present dan depression_phq9_score adalah –0.34, yang menunjukkan hubungan negatif lemah hingga sedang secara linear. Hal ini berarti, semakin tinggi kemungkinan seseorang mengalami PEM (Post-Exertional Malaise), cenderung semakin rendah skor depresi PHQ-9-nya, dan begitu juga sebaliknya.
+* Korelasi antara fatigue_severity_scale_score dan pem_present sebesar 0.58, yang menunjukkan hubungan moderat hingga kuat secara linear. Hal ini berarti semakin tinggi tingkat kelelahan seseorang, maka semakin besar kemungkinan seseorang tersebut mengalami PEM.
 
-2. Categorical Features\
+**2. Categorical Features**\
 ![Heatmap](Heatmap-Categorical-Features.png)
 
-    Interpretasi:
-    - Mayoritas nilai Cramér's V berada di bawah 0.1, yang mengindikasikan bahwa hubungan antar variabel kategorikal dalam dataset ini sangat lemah atau hampir tidak ada.
-    - Pasangan dengan asosiasi tertinggi adalah:
-        - social_activity_level dan diagnosis: 0.10
-        - exercise_frequency dan diagnosis: 0.087
-        - social_activity_level dan exercise_frequency: 0.085
-    - Variabel gender dan diagnosis memiliki nilai Cramér's V terendah (0.0067), menunjukkan tidak ada asosiasi yang berarti antara jenis kelamin dan diagnosis dalam data ini.
+Interpretasi:
+* Mayoritas nilai Cramér's V berada di bawah 0.1, yang mengindikasikan bahwa hubungan antar variabel kategorikal dalam dataset ini sangat lemah atau hampir tidak ada.
+* Pasangan dengan asosiasi tertinggi adalah:
+  - social_activity_level dan diagnosis: 0.10
+  - exercise_frequency dan diagnosis: 0.087
+  - social_activity_level dan exercise_frequency: 0.085
+* Variabel gender dan diagnosis memiliki nilai Cramér's V terendah (0.0067), menunjukkan tidak ada asosiasi yang berarti antara jenis kelamin dan diagnosis dalam data ini.
 
 ## Data Preparation
 Data Preparation adalah proses persiapan data sebelum dilakukan analisis atau pemodelan. Dalam proyek ini, proses ini mencakup penanganan _missing values_, transformasi fitur, pembagian dataset, penanganan _imbalanced data_, dan standarisasi. Hal ini bertujuan untuk memastikan model dapat belajar secara efektif dan memberikan prediksi yang akurat.
 
-1. Penanganan _Missing Value_\
-   Penanganan _missing value_ merupakan langkah krusial dalam data preparation. Tahap ini bertujuan untuk mencegah error dan meningkatkan kinerja dan keandalan model machine learning. Terdapat 2 cara penanganan yang dilakukan, yaitu:\
-  **a. Melakukan imputasi pada fitur depression_phq9_score**\
+**1. Penanganan _Missing Value_**\
+Penanganan _missing value_ merupakan langkah krusial dalam data preparation. Tahap ini bertujuan untuk mencegah error dan meningkatkan kinerja dan keandalan model machine learning. Terdapat 2 cara penanganan yang dilakukan, yaitu:
+
+- **Melakukan imputasi pada fitur depression_phq9_score**\
     Berdasarkan analisis yang telah dilakukan, diketahui:
-    - Hasil diagnosis menunjukkan **depression** ketika nilai **depression_phq9_score >= 10** dan **pem_present = 0**
-    - Hasil diagnosis menunjukkan **ME/CFS** ketika nilai **depression_phq9_score < 10** dan **pem_present = 1**
-    - Hasil diagnosis menunjukkan **both** ketika nilai **depression_phq9_score >= 10** dan **pem_present = 1**
-    
-     Dengan begitu, imputasi yang dilakukan pada fitur depression_phq9_score mempertimbangkan diagnosis logis tersebut.
+    * Hasil diagnosis menunjukkan **depression** ketika nilai **depression_phq9_score >= 10** dan **pem_present = 0**
+    * Hasil diagnosis menunjukkan **ME/CFS** ketika nilai **depression_phq9_score < 10** dan **pem_present = 1**
+    * Hasil diagnosis menunjukkan **both** ketika nilai **depression_phq9_score >= 10** dan **pem_present = 1**
+    Dengan begitu, imputasi yang dilakukan pada fitur depression_phq9_score mempertimbangkan diagnosis logis tersebut.
 
-   **b. Menghapus fitur lainnya yang memiliki _missing value_**
-   ```
-   dataset_clean = dataset.dropna()
-   ```
+- **Menghapus fitur lainnya yang memiliki _missing value_**
+    ```
+    dataset_clean = dataset.dropna()
+    ```
    
-2. Transformasi Fitur\
-    Transformasi fitur kategorikal menjadi numerik sangat penting karena sebagian besar algoritma machine learning tidak dapat memproses data dalam bentuk string. Selain itu, tahap ini memastikan bahwa model dapat memahami dan memproses informasi yang ada pada fitur kategorikal.
+**2. Transformasi Fitur**\
+Transformasi fitur kategorikal menjadi numerik sangat penting karena sebagian besar algoritma machine learning tidak dapat memproses data dalam bentuk string. Selain itu, tahap ini memastikan bahwa model dapat memahami dan memproses informasi yang ada pada fitur kategorikal.
     
-    **a. Mengubah fitur kategori menjadi fitur numerik dengan one-hot encoding**
-   ```
-   dataset_clean = pd.concat([dataset_clean, pd.get_dummies(dataset_clean['work_status'], prefix='work_status').astype(int)],axis=1)
-   dataset_clean = pd.concat([dataset_clean, pd.get_dummies(dataset_clean['social_activity_level'], prefix='social_activity_level').astype(int)],axis=1)
-   dataset_clean = pd.concat([dataset_clean, pd.get_dummies(dataset_clean['exercise_frequency'], prefix='exercise_frequency').astype(int)],axis=1)
-   ```
+- **Mengubah fitur kategori menjadi fitur numerik dengan one-hot encoding**
+    ```
+    dataset_clean = pd.concat([dataset_clean, pd.get_dummies(dataset_clean['work_status'], prefix='work_status').astype(int)],axis=1)
+    dataset_clean = pd.concat([dataset_clean, pd.get_dummies(dataset_clean['social_activity_level'], prefix='social_activity_level').astype(int)],axis=1)
+    dataset_clean = pd.concat([dataset_clean, pd.get_dummies(dataset_clean['exercise_frequency'], prefix='exercise_frequency').astype(int)],axis=1)
+    ```
 
-   **b. Mengubah fitur diagnosis menjadi fitur numerik dengan label encoding**
+- **Mengubah fitur diagnosis menjadi fitur numerik dengan label encoding**
     ```
     le = LabelEncoder()
     dataset_clean['diagnosis_encoded'] = le.fit_transform(dataset_clean['diagnosis'])
     dataset_clean.head()
     ```   
     
-3. Pembagian Dataset\
-    Pada proyek ini, dataset dibagi menjadi 80% data train dan 20% data test. Hal ini bertujuan untuk mengukur seberapa baik model akan bekerja pada data yang belum pernah dilihat sebelumnya. Dengan tahap ini, akan diketahui apakah model benar-benar belajar pola yang berguna atau hanya menghafal data. 
-    ```
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, stratify = y, random_state = 42)
-    ```
+**3. Pembagian Dataset**\
+Pada proyek ini, dataset dibagi menjadi 80% data train dan 20% data test. Hal ini bertujuan untuk mengukur seberapa baik model akan bekerja pada data yang belum pernah dilihat sebelumnya. Dengan tahap ini, akan diketahui apakah model benar-benar belajar pola yang berguna atau hanya menghafal data. 
+```
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, stratify = y, random_state = 42)
+```
 
-4. Penanganan _Imbalanced Data_\
-    Penanganan data yang _imbalanced_ sangat penting karena ketidakseimbangan kelas dapat menyebabkan model bias terhadap kelas mayoritas, sehingga performa model menjadi menyesatkan. Pada proyek ini digunakan teknik SMOTE guna menangani data yang _imbalanced_.
-    ```
-    smote = SMOTE(sampling_strategy={0: 200}, random_state=42)
-    X_train, y_train = smote.fit_resample(X_train, y_train)
-    ```
+**4. Penanganan _Imbalanced Data_**\
+Penanganan data yang _imbalanced_ sangat penting karena ketidakseimbangan kelas dapat menyebabkan model bias terhadap kelas mayoritas, sehingga performa model menjadi menyesatkan. Pada proyek ini digunakan teknik SMOTE guna menangani data yang _imbalanced_.
+```
+smote = SMOTE(sampling_strategy={0: 200}, random_state=42)
+X_train, y_train = smote.fit_resample(X_train, y_train)
+```
 
-5. Standarisasi pada Fitur Numerik\
-    Standarisasi dilakukan agar fitur dengan skala besar tidak mendominasi proses pembelajaran, menyebabkan bias, dan menurunkan akurasi. Dengan begitu, semua fitur dapat berkontribusi secara seimbang dalam proses pelatihan model.
-    ```  
-    binary_cols = ['pem_present']
-    scale_cols = [col for col in X_train[numerical_features] if col not in binary_cols]
+**5. Standarisasi pada Fitur Numerik**\
+Standarisasi dilakukan agar fitur dengan skala besar tidak mendominasi proses pembelajaran, menyebabkan bias, dan menurunkan akurasi. Dengan begitu, semua fitur dapat berkontribusi secara seimbang dalam proses pelatihan model.
+```  
+binary_cols = ['pem_present']
+scale_cols = [col for col in X_train[numerical_features] if col not in binary_cols]
     
-    scaler = StandardScaler()
-    X_train_scaled = X_train.copy()
-    scaled_array = scaler.fit_transform(X_train[scale_cols])
-    scaled_df = pd.DataFrame(scaled_array, columns=scale_cols, index=X_train.index)
+scaler = StandardScaler()
+X_train_scaled = X_train.copy()
+scaled_array = scaler.fit_transform(X_train[scale_cols])
+scaled_df = pd.DataFrame(scaled_array, columns=scale_cols, index=X_train.index)
     
-    X_final = pd.concat([scaled_df, X_train[binary_cols]], axis=1)
-    X_final.head()
-    ```
+X_final = pd.concat([scaled_df, X_train[binary_cols]], axis=1)
+X_final.head()
+```
 
 ## Modeling
-Terdapat 4 algoritma yang digunakan dalam proyek ini, yaitu:\
-**1. K-Nearest Neighbors (KNN)**
-[KNN](https://dqlab.id/fleksibilitas-kunci-keunggulan-algoritma-k-nearest-neighbors-knn) merupakan salah satu algoritma machine learning yang masuk dalam kategori supervised learning. Algoritma ini bekerja dengan prinsip sederhana, yaitu menentukan kategori suatu data berdasarkan kedekatannya dengan data lain yang sudah diklasifikasikan sebelumnya.\
-**2. AdaBoost (Adaptive Boosting)**
-[AdaBoost](https://medium.com/@haranobuhardo/advanced-machine-learning-pembuatan-adaboost-dari-nol-untuk-prediksi-kanker-payudara-314792b6b156) merupakan salah satu teknik _ensemble learning_ yang telah lama digunakan dalam berbagai aplikasi Machine Learning. Algoritma ini dikembangkan dengan tujuan untuk memperbaiki kinerja _classifier_ sederhana, atau yang sering disebut _weak learners_, melalui serangkaian iterasi yang memanfaatkan data yang sulit diklasifikasikan oleh prediktor sebelumnya.\
-**3. Random Forest**
-[Random forest](https://dqlab.id/serba-serbi-machine-learning-model-random-forest) merupakan bentuk _ensemble learning_, yang berarti menggabungkan beberapa model prediktif yang lebih sederhana untuk mencapai prediksi yang lebih akurat dan stabil. Random forest terdiri dari kumpulan decision tree yang bekerja secara independen, yang dibangun dengan menggunakan sampel data yang diambil secara acak (bootstrap aggregating/bagging) dari training dataset, serta menggunakan subset acak dari fitur yang tersedia.\
-**4. XGBoost (Extreme Gradient Boosting)**
-[XGBoost](https://medium.com/@myskill.id/xgboost-fa0a8547e197) merupakan algoritma machine learning yang efisien dan kuat yang dirancang untuk tugas klasifikasi dan regresi. Algoritma ini bekerja dengan cara melatih _weak learners_, biasanya decision tree, secara iteratif, dan menggabungkan prediksi mereka untuk membuat model yang akurat dan kuat.
+Terdapat 4 algoritma yang digunakan dalam proyek ini, yaitu:
 
-**Perbandingan Algoritma**
+**1. K-Nearest Neighbors (KNN)**\
+[KNN](https://dqlab.id/fleksibilitas-kunci-keunggulan-algoritma-k-nearest-neighbors-knn) merupakan salah satu algoritma machine learning yang masuk dalam kategori supervised learning. Algoritma ini bekerja dengan prinsip sederhana, yaitu menentukan kategori suatu data berdasarkan kedekatannya dengan data lain yang sudah diklasifikasikan sebelumnya. Parameter yang digunakan dalam proyek ini adalah ```n_neighbors=5```. Parameter ini menentukan jumlah tetangga terdekat yang akan dipertimbangkan dalam proses klasifikasi. Pemilihan yang tepat sangat penting karena nilai yang terlalu kecil bisa menyebabkan overfitting, sedangkan nilai yang terlalu besar bisa mengakibatkan underfitting.
+
+**2. AdaBoost (Adaptive Boosting)**\
+[AdaBoost](https://medium.com/@haranobuhardo/advanced-machine-learning-pembuatan-adaboost-dari-nol-untuk-prediksi-kanker-payudara-314792b6b156) merupakan salah satu teknik _ensemble learning_ yang telah lama digunakan dalam berbagai aplikasi Machine Learning. Algoritma ini dikembangkan dengan tujuan untuk memperbaiki kinerja _classifier_ sederhana, atau yang sering disebut _weak learners_, melalui serangkaian iterasi yang memanfaatkan data yang sulit diklasifikasikan oleh prediktor sebelumnya. Parameter yang digunakan dalam proyek ini adalah ```n_estimators=50```, ```algorithm=SAMME.R```, dan ```random_state=42```. Parameter ```n_estimators``` adalah jumlah maksimum _weak learners_ yang akan digunakan dalam proses boosting. Parameter ```algorithm``` untuk menentukan jenis boosting yang digunakan, yaitu apakah model akan menggunakan prediksi kelas secara langsung (``SAMME``) atau memanfaatkan probabilitas kelas dari base estimator (``SAMME.R``). Parameter ```random_state``` digunakan untuk mengatur seed acak untuk memastikan bahwa proses pelatihan tidak menghasilkan hasil yang berbeda setiap kali dijalankan.
+
+**3. Random Forest**\
+[Random forest](https://dqlab.id/serba-serbi-machine-learning-model-random-forest) merupakan bentuk _ensemble learning_, yang berarti menggabungkan beberapa model prediktif yang lebih sederhana untuk mencapai prediksi yang lebih akurat dan stabil. Random forest terdiri dari kumpulan decision tree yang bekerja secara independen, yang dibangun dengan menggunakan sampel data yang diambil secara acak (bootstrap aggregating/bagging) dari training dataset, serta menggunakan subset acak dari fitur yang tersedia. Parameter yang digunakan dalam proyek ini adalah ```criterion='gini'```, ```n_estimators=100```, ```max_depth=9```, dan ```random_state=44```. Parameter ```criterion``` untuk mengukur kualitas pemisahan pada setiap node, ```n_estimators``` merupakan jumlah pohon yang akan digabungkan dalam ensemble, ```max_depth``` menentukan kedalaman maksimum dari setiap pohon keputusan.
+
+**4. XGBoost (Extreme Gradient Boosting)**\
+[XGBoost](https://medium.com/@myskill.id/xgboost-fa0a8547e197) merupakan algoritma machine learning yang efisien dan kuat yang dirancang untuk tugas klasifikasi dan regresi. Algoritma ini bekerja dengan cara melatih _weak learners_, biasanya decision tree, secara iteratif, dan menggabungkan prediksi mereka untuk membuat model yang akurat dan kuat. Terdapat beberapa parameter yang digunakan dalam proyek ini, yaitu:
+- **`objective="multi:softprob"`**  
+  Menentukan jenis tugas klasifikasi. `multi:softprob` digunakan untuk klasifikasi multikelas dan mengembalikan probabilitas untuk setiap kelas.
+
+- **`eval_metric="mlogloss"`**  
+  Metrik evaluasi yang digunakan selama pelatihan. `mlogloss` (multi-class log loss) mengukur seberapa baik model memprediksi probabilitas kelas yang benar. Semakin kecil nilainya, semakin baik.
+
+- **`n_estimators=100`**  
+  Jumlah pohon yang akan dibangun. Lebih banyak pohon bisa meningkatkan akurasi, tapi juga meningkatkan waktu pelatihan dan risiko overfitting.
+
+- **`learning_rate=0.1`**  
+  Mengontrol kontribusi setiap pohon terhadap prediksi akhir. Nilai yang kecil membuat model belajar lebih lambat tapi lebih stabil.
+
+- **`reg_alpha=0.5`**  
+  Regularisasi L1 (Lasso). Menambahkan penalti terhadap bobot besar untuk mendorong sparsity (bobot nol) guna menghindari overfitting.
+
+- **`reg_lambda=0.5`**  
+  Regularisasi L2 (Ridge). Menambahkan penalti terhadap bobot besar untuk menjaga kestabilan model dan mencegah overfitting.
+
+### **Perbandingan Algoritma**
 
 | Algoritma   | Kelebihan  | Kekurangan  |
 |-------------|------------|-------------|
-| KNN         | Sederhana, mudah dipahami dan diimplementasikan, cocok untuk data skala kecil hingga menengah | Lambat untuk data besar, sensitif terhadap skala dan outlier             |
+| KNN         | Sederhana, mudah dipahami dan diimplementasikan, cocok untuk data skala kecil hingga menengah | Lambat untuk data besar, sensitif terhadap skala dan outlier|
 | AdaBoost    | Sederhana, fokus pada kesalahan sulit, tahan overfitting    | Sensitif terhadap noise dan outlier                       |
-| Random Forest | Tahan overfitting, bisa ukur _feature importance_, stabil, fleksibel, toleransi terhadap _imbalanced data_ | Kompleks, interpretasi sulit, lambat untuk prediksi     |
-| XGBoost     | Sangat akurat, efisien, mendukung regularisasi dan missing value | Kompleks, tuning sulit, interpretasi tidak intuitif     |
+| Random Forest | Tahan overfitting, bisa ukur _feature importance_, stabil, fleksibel, toleransi terhadap _imbalanced data_ | Kompleks, interpretasi sulit, lambat untuk prediksi      |
+| XGBoost     | Sangat akurat, efisien, mendukung regularisasi dan missing value | Kompleks, tuning sulit, interpretasi tidak intuitif  |
 
 ## Evaluation
 Pada tahap ini, evaluasi dilakukan dengan menggukan classification report karena dapat memberikan ringkasan performa model klasifikasi untuk setiap kelas. Laporan yang diberikan mencakup empat metrik utama:
@@ -236,7 +266,8 @@ Pada tahap ini, evaluasi dilakukan dengan menggukan classification report karena
 |Recall     | Mengukur kemampuan model dalam menangkap semua kasus positif | TP / (TP + FN) |
 |F1-Score   | Harmonis antara precision dan recall, cocok untuk data tidak seimbang | 2 * (Precision * Recall) / (Precision + Recall) |
 
-Hasil evaluasi untuk tiap algoritma ditunjukkan sebagai berikut.\
+Hasil evaluasi untuk tiap algoritma ditunjukkan sebagai berikut.
+
 **1. KNN**
 | Kelas               | Precision | Recall | F1-Score | Support |
 |---------------------|-----------|--------|----------|---------|
@@ -282,7 +313,8 @@ Interpretasi:
 - Algoritma KNN memiliki nilai akurasi terendah dibandingkan dengan 3 algoritma lainnya, yaitu sebesar 62%.
 - Algoritma AdaBoost memberikan performa yang cukup baik, dengan nilai akurasi sebesar 79%. Meskipun demikian, algoritma ini tidak mampu untuk mendeteksi kelas "Both" yang mungkin memiliki gejala yang beririsan dengan dua kelas lain. Hal ini bisa saja terjadi karena model tidak cukup kompleks, sehingga tidak mampu menangkap kombinasi gejala dari dua kondisi sekaligus.
 
-Berdasarkan hal tersebut, diketahui bahwa model terbaik dari proyek ini adalah Random Forest dan XGBoost. Dengan begitu, akan dilihat _feature importances_ dari kedua algoritma tersebut.\
+Berdasarkan hal tersebut, diketahui bahwa model terbaik dari proyek ini adalah Random Forest dan XGBoost. Dengan begitu, akan dilihat _feature importances_ dari kedua algoritma tersebut.
+
 **1. Random Forest**
 | Fitur                           | Importance |
 |---------------------------------|------------|
